@@ -2,10 +2,8 @@ package Capstone.fpsgame.domain;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
+import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDate;
@@ -24,12 +22,23 @@ public class User {
     private String nickName;
     @NonNull
     private String password;
-    @LastModifiedDate @Column(name="password_recent_date")
+    @LastModifiedDate
+    @Column(name="password_recent_date")
     private LocalDate passwordRecentDate;
     @Column(name="phone_number")
     private String phoneNumber;
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="user_info_id")
     private UserInfo userInfo;
+    @ColumnDefault("'USER'")
+    private String userRole;
+    @Builder
+    public User(String email,String nickName,String password,String phoneNumber,UserInfo userInfo){
+        this.email=email;
+        this.nickName=nickName;
+        this.password=password;
+        this.phoneNumber=phoneNumber;
+        this.userInfo=userInfo;
+    }
 
 }

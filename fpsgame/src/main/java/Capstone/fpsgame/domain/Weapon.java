@@ -15,10 +15,10 @@ public class Weapon {
     private Long id;
     private String name;
     @Column(name="attack_power")
-    private Long attackPower;
+    private float attackPower;
     @Column(name="ammo_capacity")
     private int ammoCapacity;
-    private Long weight;
+    private float weight;
     @OneToOne(mappedBy = "weapon")
     private UserInfo userInfo;
 
