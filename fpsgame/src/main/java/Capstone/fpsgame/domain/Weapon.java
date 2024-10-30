@@ -19,7 +19,6 @@ public class Weapon {
     @Column(name="ammo_capacity")
     private int ammoCapacity;
     private Long weight;
-
     @OneToOne(mappedBy = "weapon")
     private UserInfo userInfo;
 

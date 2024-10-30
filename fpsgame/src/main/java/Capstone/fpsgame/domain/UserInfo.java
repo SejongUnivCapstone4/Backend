@@ -20,9 +20,11 @@ public class UserInfo {
     @Column(name="jump_power")
     private Long jumpPower;
     private Long health;
-    @OneToOne(mappedBy = "user_info")
+    @OneToOne(mappedBy = "userInfo")
+    private User user;
     //foreign key를 Userinfo에서 관리함
-    @JoinColumn(name="weapon_id")
+    @OneToOne
+    @JoinColumn(name = "weapon_id")
     private Weapon weapon;
 
 

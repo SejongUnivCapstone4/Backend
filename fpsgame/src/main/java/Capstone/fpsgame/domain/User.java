@@ -28,7 +28,8 @@ public class User {
     private LocalDate passwordRecentDate;
     @Column(name="phone_number")
     private String phoneNumber;
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="user_info_id")
     private UserInfo userInfo;
 
 }

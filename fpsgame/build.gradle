@@ -29,9 +29,13 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
+	runtimeOnly 'com.mysql:mysql-connector-j'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 	implementation 'jakarta.validation:jakarta.validation-api:3.1.0'
+//	implementation 'org.springframework.security:spring-security-web:6.3.1'
+//	implementation 'org.springframework.security:spring-security-config:6.3.1'
+//	implementation 'org.springframework.security:spring-security-core:6.3.1'
 }
 
 tasks.named('test') {
