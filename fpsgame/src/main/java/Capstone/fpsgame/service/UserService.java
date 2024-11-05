@@ -6,6 +6,10 @@ import Capstone.fpsgame.domain.Weapon;
 import Capstone.fpsgame.dto.SiginInRequestDto;
 import Capstone.fpsgame.dto.SignInResponseDto;
 import Capstone.fpsgame.dto.SignUpRequestDto;
+import Capstone.fpsgame.global.exception.UserDuplicatedException;
+import Capstone.fpsgame.global.exception.UserInfoNotFountException;
+import Capstone.fpsgame.global.exception.UserNotFoundException;
+import Capstone.fpsgame.global.exception.WeaponNotFounException;
 import Capstone.fpsgame.repository.UserInfoRepository;
 import Capstone.fpsgame.repository.UserRepository;
 import Capstone.fpsgame.repository.WeaponRepository;
@@ -20,22 +24,29 @@ public class UserService {
     private final WeaponRepository weaponRepository;
 
     public void signUp(SignUpRequestDto dto){
-        UserInfo userInfo=userInfoRepository.save(UserInfo.builder().build());
+        //TODO email 중복 처리 예외 컨트롤
+        if(checkDuplicatedEmail(dto)) {
+            throw new UserDuplicatedException();
+        }
+        UserInfo userInfo = userInfoRepository.save(UserInfo.builder().build());
         userRepository.save(dto.toUser(userInfo));
+    }
+
+    private boolean checkDuplicatedEmail(SignUpRequestDto dto) {
+        return userRepository.existsByEmail(dto.email());
     }
 
     public SignInResponseDto signIn(SiginInRequestDto dto) {
         //TODO 커스텀 예외를 만들고 ControllerAdvice를 이용해서 예외 controll하기
       User user= userRepository.findByEmailAndPassword(dto.email(), dto.password()).orElseThrow(
-               ()->new RuntimeException("해당 이메일과 비밀번호는 존재하지 않습니다.")
+              UserNotFoundException::new
        );
       UserInfo userInfo=userInfoRepository.findByUser(user).orElseThrow(
-              ()->new RuntimeException("해당 회원에 대한 정보가 존재하지 않습니다.")
+          UserInfoNotFountException::new
       );
       Weapon weapon= weaponRepository.findByUserInfo(userInfo).orElseThrow(
-              ()->new RuntimeException("해당 회원에 대한 무기 정보가 존재하지 않습니다.")
+              WeaponNotFounException::new
       );
-
     return SignInResponseDto.from(user,userInfo,weapon);
     }
 

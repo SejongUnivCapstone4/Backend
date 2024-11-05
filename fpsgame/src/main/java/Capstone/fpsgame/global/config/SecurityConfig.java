@@ -32,12 +32,13 @@ public class SecurityConfig {
     private final JwtUtils jwtUtils;
     private final CustomAccessDeniedHandler accessDeniedHandler;
     private final CustomAuthenticationEntryPoint authenticationEntryPoint;
+    //TODO 현재는 Auth_WHITELIST가 아래와 같이 현재의 웹과는 맞지 않음 이를 변경해야함.
     @PostConstruct
     public void init() {
         SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_THREADLOCAL);
     }
     private static final String[] AUTH_WHITELIST = {
-           "/main/**","/authorization/**"
+           "/main/**"
     };
 
     @Bean
