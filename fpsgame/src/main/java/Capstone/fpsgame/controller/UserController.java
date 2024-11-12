@@ -16,6 +16,8 @@ import org.springframework.web.client.RestTemplate;
 import java.util.HashMap;
 import java.util.Map;
 
+//TODO error.html보충하기
+// 로그인 후 과정처리하기
 @Controller
 @RequestMapping("/api")
 @RequiredArgsConstructor
