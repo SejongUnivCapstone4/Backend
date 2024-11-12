@@ -38,7 +38,7 @@ public class SecurityConfig {
         SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_THREADLOCAL);
     }
     private static final String[] AUTH_WHITELIST = {
-           "/main/**"
+           "/main/**","/api/**"
     };
 
     @Bean

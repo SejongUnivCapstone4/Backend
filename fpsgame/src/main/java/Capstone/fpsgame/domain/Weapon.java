@@ -2,6 +2,7 @@ package Capstone.fpsgame.domain;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -19,7 +20,14 @@ public class Weapon {
     @Column(name="ammo_capacity")
     private int ammoCapacity;
     private float weight;
-    @OneToOne(mappedBy = "weapon")
-    private UserInfo userInfo;
+
+    @Builder
+    public Weapon(String name,float attackPower,int ammoCapacity,float weight){
+        this.name=name;
+        this.attackPower=attackPower;
+        this.ammoCapacity=ammoCapacity;
+        this.weight=weight;
+
+    }
 
 }

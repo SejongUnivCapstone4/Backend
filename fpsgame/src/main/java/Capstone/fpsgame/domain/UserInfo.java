@@ -31,6 +31,10 @@ public class UserInfo {
         jumpPower=0.2F;
         health= 200L;
     }
+    public UserInfo toUserInfo(Weapon weapon){
+        this.weapon=weapon;
+        return this;
+    }
 
 
 
