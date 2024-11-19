@@ -13,11 +13,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 //TODO error.html보충하기
 // 로그인 후 과정처리하기
+// TODO 테스트코드 작성하기
 @Controller
 @RequestMapping("/api")
 @RequiredArgsConstructor
@@ -51,7 +53,8 @@ public class UserController {
     public String signIn(@ModelAttribute("signInRequest") SignInRequestDto dto,Model model) {
 
         SignInResponseDto signInResponseDto=userService.signIn(dto);
-        sendSignalToUnreal(signInResponseDto); // 예를 들어, 사용자 이름을 함께 보낼 수 있음
+//        sendSignalToUnreal(signInResponseDto); // 예를 들어, 사용자 이름을 함께 보낼 수 있음
+        executeUnrealExe();
         return "signinsuccess"; // 로그인 성공 시 홈 페이지로 리다이렉트
     }
     private void sendSignalToUnreal(SignInResponseDto dto) {
@@ -63,6 +66,15 @@ public class UserController {
             restTemplate.postForObject(unrealServerUrl, params, String.class);
         } catch (Exception e) {
             System.out.println("Unreal 서버와의 통신에 실패했습니다: " + e.getMessage());
+        }
+    }
+    private void executeUnrealExe() {
+        String exeFilePath = "C:\\MPP\\MPP.exe"; // 실행할 exe 파일 경로
+        try {
+            ProcessBuilder processBuilder = new ProcessBuilder(exeFilePath);
+            processBuilder.start(); // exe 파일 실행
+        } catch (IOException e) {
+            System.out.println("exe 파일 실행에 실패했습니다: " + e.getMessage());
         }
     }
 
