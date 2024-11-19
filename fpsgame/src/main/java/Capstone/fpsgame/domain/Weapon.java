@@ -17,16 +17,13 @@ public class Weapon {
     private String name;
     @Column(name="attack_power")
     private float attackPower;
-    @Column(name="ammo_capacity")
-    private int ammoCapacity;
-    private float weight;
+
 
     @Builder
     public Weapon(String name,float attackPower,int ammoCapacity,float weight){
         this.name=name;
         this.attackPower=attackPower;
-        this.ammoCapacity=ammoCapacity;
-        this.weight=weight;
+
 
     }
 

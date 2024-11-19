@@ -29,7 +29,7 @@ public class UserInfo {
     public UserInfo(){
         movementSpeed= 0.2F;
         jumpPower=0.2F;
-        health= 200L;
+        health= 100L;
     }
     public UserInfo toUserInfo(Weapon weapon){
         this.weapon=weapon;

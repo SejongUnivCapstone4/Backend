@@ -17,27 +17,15 @@ import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.nio.file.Watchable;
+
 @Service
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
     private final UserInfoRepository userInfoRepository;
     private final WeaponRepository weaponRepository;
-    private Weapon liple;
-    private Weapon shotgun;
-    private Weapon snipper;
-    @PostConstruct
-    public void makeWeapon(){
-       liple=weaponRepository.save(Weapon.builder().name("Liple").attackPower(20)
-                .weight(20)
-                .build());
-        shotgun=weaponRepository.save(Weapon.builder().name("Shotgun").attackPower(20)
-                .weight(20)
-                .build());
-        snipper=weaponRepository.save(Weapon.builder().name("Snipper").attackPower(20)
-                .weight(20)
-                .build());
-    }
+
 
     public void signUp(SignUpRequestDto dto){
 
@@ -46,7 +34,7 @@ public class UserService {
             throw new UserDuplicatedException();
         }
         UserInfo userInfo = userInfoRepository.save(UserInfo.builder().build());
-        userInfo=userInfo.toUserInfo(liple);
+        userInfo=userInfo.toUserInfo(weaponRepository.findByName("rifle").get());
 
         userRepository.save(dto.toUser(userInfo));
     }
