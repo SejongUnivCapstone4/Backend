@@ -9,15 +9,12 @@ import Capstone.fpsgame.dto.SignUpRequestDto;
 import Capstone.fpsgame.global.exception.UserDuplicatedException;
 import Capstone.fpsgame.global.exception.UserInfoNotFountException;
 import Capstone.fpsgame.global.exception.UserNotFoundException;
-import Capstone.fpsgame.global.exception.WeaponNotFounException;
 import Capstone.fpsgame.repository.UserInfoRepository;
 import Capstone.fpsgame.repository.UserRepository;
 import Capstone.fpsgame.repository.WeaponRepository;
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.nio.file.Watchable;
 
 @Service
 @RequiredArgsConstructor
@@ -25,7 +22,6 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserInfoRepository userInfoRepository;
     private final WeaponRepository weaponRepository;
-
 
     public void signUp(SignUpRequestDto dto){
 
@@ -55,6 +51,9 @@ public class UserService {
       );
       Weapon weapon= userInfo.getWeapon();
     return SignInResponseDto.from(user,userInfo,weapon);
+    }
+    public String changeUserInfo(){
+
     }
 
 }
