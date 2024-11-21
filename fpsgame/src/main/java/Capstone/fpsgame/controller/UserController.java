@@ -4,26 +4,31 @@ import Capstone.fpsgame.dto.SignInRequestDto;
 import Capstone.fpsgame.dto.SignInResponseDto;
 import Capstone.fpsgame.dto.SignUpRequestDto;
 import Capstone.fpsgame.service.UserService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
+import java.io.*;
+
 import java.util.HashMap;
 import java.util.Map;
 
-//TODO error.html보충하기
+// TODO error.html보충하기
 // 로그인 후 과정처리하기
 // TODO 테스트코드 작성하기
 @Controller
 @RequestMapping("/api")
 @RequiredArgsConstructor
 public class UserController {
+
     private final UserService userService;
 
     // 회원가입 폼 페이지
@@ -51,27 +56,52 @@ public class UserController {
     // 로그인 처리
     @PostMapping("/signin")
     public String signIn(@ModelAttribute("signInRequest") SignInRequestDto dto,Model model) {
-
         SignInResponseDto signInResponseDto=userService.signIn(dto);
-//        sendSignalToUnreal(signInResponseDto); // 예를 들어, 사용자 이름을 함께 보낼 수 있음
-        executeUnrealExe();
+        sendSignalToUnreal(signInResponseDto); // 예를 들어, 사용자 이름을 함께 보낼 수 있음
         return "signinsuccess"; // 로그인 성공 시 홈 페이지로 리다이렉트
     }
     private void sendSignalToUnreal(SignInResponseDto dto) {
-        String unrealServerUrl = "http://unreal-server-url/endpoint"; // Unreal 서버의 엔드포인트 URL
-        RestTemplate restTemplate = new RestTemplate();
-        Map<String, SignInResponseDto> params = new HashMap<>();
-        params.put("userInfo", dto);
+        String exeFilePath = "C:\\Windows\\Windows\\MPP.exe"; // 실행할 exe 파일 경로
+        // JSON 데이터 생성
+        ObjectMapper objectMapper = new ObjectMapper();
         try {
-            restTemplate.postForObject(unrealServerUrl, params, String.class);
+            // DTO를 JSON 문자열로 변환
+            String jsonInput = objectMapper.writeValueAsString(dto);
+            // ProcessBuilder로 exe 파일 실행
+            ProcessBuilder processBuilder = new ProcessBuilder(exeFilePath);
+            Process process = processBuilder.start();
+
+            // exe 파일로 JSON 데이터를 전달
+            try (OutputStream os = process.getOutputStream();
+                 BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os))) {
+                writer.write(jsonInput); // JSON 데이터를 stdin으로 전달
+                writer.flush(); // 데이터 강제 전송
+            }
+
+            // exe 파일 출력 읽기
+            try (BufferedReader reader = new BufferedReader(
+                    new InputStreamReader(process.getInputStream()))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    System.out.println("Unreal 출력: " + line);
+                }
+            }
+            // 프로세스 종료 대기
+            int exitCode = process.waitFor();
+            if (exitCode == 0) {
+                System.out.println("Unreal exe 파일 실행 성공");
+            } else {
+                System.err.println("Unreal exe 파일 실행 실패, 종료 코드: " + exitCode);
+            }
         } catch (Exception e) {
-            System.out.println("Unreal 서버와의 통신에 실패했습니다: " + e.getMessage());
+            System.err.println("Unreal exe 파일 실행 중 오류 발생: " + e.getMessage());
         }
     }
     private void executeUnrealExe() {
-        String exeFilePath = "C:\\MPP\\MPP.exe"; // 실행할 exe 파일 경로
+        String exeFilePath = "C:\\Windows\\Windows\\MPP.exe"; // 실행할 exe 파일 경로
         try {
             ProcessBuilder processBuilder = new ProcessBuilder(exeFilePath);
+            System.out.println(processBuilder);
             processBuilder.start(); // exe 파일 실행
         } catch (IOException e) {
             System.out.println("exe 파일 실행에 실패했습니다: " + e.getMessage());
@@ -79,5 +109,5 @@ public class UserController {
     }
 
     // 홈 페이지
-
 }
+
